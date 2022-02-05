@@ -1,126 +1,127 @@
 package com.example.android.connectedweather
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.example.android.connectedweather.data.ForecastPeriod
+import com.example.android.connectedweather.data.WeatherResults
+import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.android.material.snackbar.Snackbar
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var requestQueue: RequestQueue
+    private val openWeatherAdapter = ForecastAdapter(this@MainActivity,::onWeatherResultClick)
+
+    private val apiBaseUrl = "https://api.openweathermap.org/data/2.5/forecast?"
+
+    private lateinit var forecastListRV: RecyclerView
+    private lateinit var fetchErrorTV: TextView
+    private lateinit var loadingIndicator: ProgressBar
+    private lateinit var coordinatorLayout: CoordinatorLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        requestQueue = Volley.newRequestQueue(this)
+
         val forecastListRV = findViewById<RecyclerView>(R.id.rv_forecast_list)
+        val fetchErrorTV = findViewById<TextView>(R.id.tv_fetch_error)
+        val loadingIndicator = findViewById<ProgressBar>(R.id.indeterminateBar)
         forecastListRV.layoutManager = LinearLayoutManager(this)
         forecastListRV.setHasFixedSize(true)
+        coordinatorLayout = findViewById<CoordinatorLayout>(R.id.coordinator_layout)
 
-        val forecastDataItems = this.initForecastPeriods()
-        forecastListRV.adapter = ForecastAdapter(forecastDataItems)
+        forecastListRV.adapter = openWeatherAdapter
+
+        queryOpenWeather()
     }
 
-    private fun initForecastPeriods(): MutableList<ForecastPeriod> {
-        return mutableListOf(
-            ForecastPeriod(
-                year = 2022,
-                month = 0,
-                day = 14,
-                highTemp = 51,
-                lowTemp = 43,
-                pop = 0.25,
-                shortDesc = "Mostly sunny",
-                longDesc = "Mostly sunny with clouds increasing in the evening"
-            ),
-            ForecastPeriod(
-                year = 2022,
-                month = 0,
-                day = 15,
-                highTemp = 55,
-                lowTemp = 39,
-                pop = 0.8,
-                shortDesc = "AM showers",
-                longDesc = "Morning showers receding in the afternoon, with patches of sun later in the day"
-            ),
-            ForecastPeriod(
-                year = 2022,
-                month = 0,
-                day = 16,
-                highTemp = 47,
-                lowTemp = 39,
-                pop = 0.1,
-                shortDesc = "AM fog/PM clouds",
-                longDesc = "Cooler, with morning fog lifting into a cloudy day"
-            ),
-            ForecastPeriod(
-                year = 2022,
-                month = 0,
-                day = 17,
-                highTemp = 53,
-                lowTemp = 36,
-                pop = 0.6,
-                shortDesc = "AM showers",
-                longDesc = "Chance of light rain in the morning"
-            ),
-            ForecastPeriod(
-                year = 2022,
-                month = 0,
-                day = 18,
-                highTemp = 49,
-                lowTemp = 33,
-                pop = 0.1,
-                shortDesc = "Partly cloudy",
-                longDesc = "Early clouds clearing as the day goes on; nighttime temperatures approaching freezing"
-            ),
-            ForecastPeriod(
-                year = 2022,
-                month = 0,
-                day = 19,
-                highTemp = 49,
-                lowTemp = 36,
-                pop = 0.15,
-                shortDesc = "Partly cloudy",
-                longDesc = "Clouds increasing throughout the day with periods of sun interspersed"
-            ),
-            ForecastPeriod(
-                year = 2022,
-                month = 0,
-                day = 20,
-                highTemp = 48,
-                lowTemp = 38,
-                pop = 0.3,
-                shortDesc = "Mostly cloudy",
-                longDesc = "Cloudy all day, with a slight chance of rain late in the evening"
-            ),
-            ForecastPeriod(
-                year = 2022,
-                month = 0,
-                day = 21,
-                highTemp = 45,
-                lowTemp = 35,
-                pop = 0.5,
-                shortDesc = "Showers",
-                longDesc = "Cooler with periods of rain throughout the day"
-            ),
-            ForecastPeriod(
-                year = 2022,
-                month = 0,
-                day = 22,
-                highTemp = 45,
-                lowTemp = 30,
-                pop = 0.3,
-                shortDesc = "AM showers",
-                longDesc = "Cool with a chance of rain in the morning; nighttime temperatures just below freezing"
-            ),
-            ForecastPeriod(
-                year = 2022,
-                month = 0,
-                day = 23,
-                highTemp = 44,
-                lowTemp = 31,
-                pop = 0.5,
-                shortDesc = "Few showers",
-                longDesc = "Cool with a chance rain throughout the day; nighttime temperatures just below freezing"
-            )
-        )
+    // start with hardcoded location as Corvallis (can try to implement geocoding api as bonus)
+    private fun queryOpenWeather(){
+        val url = "${apiBaseUrl}q=Corvallis,Oregon&units=imperial&appid=05daa70b4de95831930f7b0b507e9564"
+
+        val moshi = Moshi.Builder()
+            .addLast(KotlinJsonAdapterFactory())
+            .build()
+        val jsonAdapter: JsonAdapter<OpenWeatherResults> =
+            moshi.adapter(OpenWeatherResults::class.java)
+
+        val req = StringRequest(
+            Request.Method.GET,
+            url,
+            {
+                val results = jsonAdapter.fromJson(it)
+                openWeatherAdapter.updateWeatherList(results?.list)
+                //loadingIndicator.visibility = View.INVISIBLE
+                //forecastListRV.visibility = View.VISIBLE
+            },
+            {
+                loadingIndicator.visibility = View.INVISIBLE
+                fetchErrorTV.visibility = View.VISIBLE
+            })
+
+        //loadingIndicator.visibility = View.VISIBLE
+        //forecastListRV.visibility = View.INVISIBLE
+        //fetchErrorTV.visibility = View.INVISIBLE
+        requestQueue.add(req)
+    }
+
+    private data class OpenWeatherResults(
+        val list: List<WeatherResults>
+    )
+
+    private fun onWeatherResultClick(result: WeatherResults) {
+        val intent = Intent(this, DetailedWeatherView::class.java).apply {
+            putExtra(EXTRA_WEATHER_RESULT, result)
+        }
+        startActivity(intent)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.open_map, menu)
+        return true
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.action_open_map -> {
+                viewLocationOnWeb()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun viewLocationOnWeb() {
+        val uri = Uri.parse("geo:44.5646,123.2620?q=" + Uri.encode("Corvallis,Oregon"))
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        try {
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Snackbar.make(coordinatorLayout,
+                "Unable to Access Maps",
+                Snackbar.LENGTH_LONG
+            ).show()
+        }
     }
 }

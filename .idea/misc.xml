@@ -3,6 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/atpre/Desktop/CS492/assignment-2-prestwia/app/src/main/res/drawable/ic_baseline_cloud_queue_24.xml" value="0.1" />
+        <entry key="..\:/Users/atpre/Desktop/CS492/assignment-2-prestwia/app/src/main/res/drawable/ic_baseline_umbrella_24.xml" value="0.1285" />
+        <entry key="..\:/Users/atpre/Desktop/CS492/assignment-2-prestwia/app/src/main/res/drawable/ic_temperature_thermometer.xml" value="0.1285" />
+        <entry key="..\:/Users/atpre/Desktop/CS492/assignment-2-prestwia/app/src/main/res/drawable/ic_temperature_thermometer_hot.xml" value="0.1285" />
+        <entry key="..\:/Users/atpre/Desktop/CS492/assignment-2-prestwia/app/src/main/res/drawable/ic_wind.xml" value="0.1285" />
+        <entry key="..\:/Users/atpre/Desktop/CS492/assignment-2-prestwia/app/src/main/res/layout/activity_detailed_weather_view.xml" value="0.1" />
+        <entry key="..\:/Users/atpre/Desktop/CS492/assignment-2-prestwia/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/atpre/Desktop/CS492/assignment-2-prestwia/app/src/main/res/layout/forecast_list_item.xml" value="0.1" />
+        <entry key="..\:/Users/atpre/Desktop/CS492/assignment-2-prestwia/app/src/main/res/menu/open_map.xml" value="0.1" />
+        <entry key="..\:/Users/atpre/Desktop/CS492/assignment-2-prestwia/app/src/main/res/menu/share.xml" value="0.10462962962962963" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/forecast_list_item.xml" value="0.20833333333333334" />
       </map>

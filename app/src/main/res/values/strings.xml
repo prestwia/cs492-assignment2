@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Connected Weather</string>
+    <string name="fetch_error">Unable to get weather data</string>
+    <string name="action_open_map">Open Map</string>
+    <string name="action_share">Share Weather</string>
+    <string name="share_weather">It is %1$s in %2$s today!</string>
 </resources>
