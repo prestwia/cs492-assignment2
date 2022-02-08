@@ -7,8 +7,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.example.android.connectedweather.data.WeatherResults
-import com.squareup.picasso.Picasso
 import kotlin.math.roundToInt
 
 const val EXTRA_WEATHER_RESULT = "WEATHER_RESULT"
@@ -81,10 +81,9 @@ class DetailedWeatherView : AppCompatActivity() {
             findViewById<TextView>(R.id.tv_detail_wind).text = result!!.wind!!.speed
                 .roundToInt().toString() + " MPH"
             findViewById<TextView>(R.id.tv_detail_desc).text = result!!.weather[0].description
-            val img: ImageView = findViewById(R.id.detailed_weather_icon)
-            Picasso.get().load("http://openweathermap.org/img/wn/10d.png")
-                .placeholder(R.drawable.ic_baseline_icon_placeholder)
-                .into(img)
+
+            val img = findViewById<ImageView>(R.id.detailed_weather_icon)
+            Glide.with(this).load("http://openweathermap.org/img/wn/10d.png").into(img)
         }
     }
 

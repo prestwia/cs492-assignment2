@@ -43,9 +43,9 @@ class MainActivity : AppCompatActivity() {
 
         requestQueue = Volley.newRequestQueue(this)
 
-        val forecastListRV = findViewById<RecyclerView>(R.id.rv_forecast_list)
-        val fetchErrorTV = findViewById<TextView>(R.id.tv_fetch_error)
-        val loadingIndicator = findViewById<ProgressBar>(R.id.indeterminateBar)
+        forecastListRV = findViewById<RecyclerView>(R.id.rv_forecast_list)
+        fetchErrorTV = findViewById<TextView>(R.id.tv_fetch_error)
+        loadingIndicator = findViewById<ProgressBar>(R.id.indeterminateBar)
         forecastListRV.layoutManager = LinearLayoutManager(this)
         forecastListRV.setHasFixedSize(true)
         coordinatorLayout = findViewById<CoordinatorLayout>(R.id.coordinator_layout)
@@ -71,17 +71,17 @@ class MainActivity : AppCompatActivity() {
             {
                 val results = jsonAdapter.fromJson(it)
                 openWeatherAdapter.updateWeatherList(results?.list)
-                //loadingIndicator.visibility = View.INVISIBLE
-                //forecastListRV.visibility = View.VISIBLE
+                loadingIndicator.visibility = View.INVISIBLE
+                forecastListRV.visibility = View.VISIBLE
             },
             {
                 loadingIndicator.visibility = View.INVISIBLE
                 fetchErrorTV.visibility = View.VISIBLE
             })
 
-        //loadingIndicator.visibility = View.VISIBLE
-        //forecastListRV.visibility = View.INVISIBLE
-        //fetchErrorTV.visibility = View.INVISIBLE
+        loadingIndicator.visibility = View.VISIBLE
+        forecastListRV.visibility = View.INVISIBLE
+        fetchErrorTV.visibility = View.INVISIBLE
         requestQueue.add(req)
     }
 

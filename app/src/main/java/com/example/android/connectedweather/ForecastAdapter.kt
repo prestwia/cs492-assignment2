@@ -8,7 +8,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.connectedweather.data.WeatherResults
-import com.squareup.picasso.Picasso
 import kotlin.math.roundToInt
 
 
@@ -42,7 +41,6 @@ class ForecastAdapter(private val context: Context, private val onWeatherClick: 
         private val highTempTV: TextView = view.findViewById(R.id.tv_max_temp)
         private val lowTempTV: TextView = view.findViewById(R.id.tv_min_temp)
         private val popTV: TextView = view.findViewById(R.id.tv_pop)
-        private var img = view.findViewById<ImageView>(R.id.weather_icon)
 
 
         private var currentWeatherResult: WeatherResults? = null

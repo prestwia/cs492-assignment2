@@ -11,11 +11,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="8dp">
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/detailed_weather_icon"
-            />
+        android:layout_gravity="center"/>
+
     <TextView
         android:id="@+id/tv_city_name"
         android:layout_width="wrap_content"
