@@ -72,12 +72,12 @@
             app:layout_constraintGuide_percent="0.5" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:id="@+id/iv_rv_weather_icon"
             app:layout_constraintStart_toEndOf="@id/tv_pop"
             app:layout_constraintEnd_toStartOf="@id/tv_max_temp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guideline"
             />
 
         <TextView

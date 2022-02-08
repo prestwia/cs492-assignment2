@@ -3,6 +3,7 @@ package com.example.android.connectedweather
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
@@ -83,7 +84,17 @@ class DetailedWeatherView : AppCompatActivity() {
             findViewById<TextView>(R.id.tv_detail_desc).text = result!!.weather[0].description
 
             val img = findViewById<ImageView>(R.id.detailed_weather_icon)
-            Glide.with(this).load("http://openweathermap.org/img/wn/10d.png").into(img)
+            val url = "http://openweathermap.org/img/wn/${result!!.weather[0].icon}.png"
+            //val url = "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg"
+            Log.d("Image", url)
+            if (url !== null) {
+                Glide.with(this)
+                    .load(url)
+                    .centerCrop()
+                    .into(img)
+            } else {
+                img.setImageResource(R.drawable.ic_launcher_background)
+            }
         }
     }
 

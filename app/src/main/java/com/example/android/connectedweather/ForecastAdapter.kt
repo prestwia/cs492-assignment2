@@ -1,12 +1,14 @@
 package com.example.android.connectedweather
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.android.connectedweather.data.WeatherResults
 import kotlin.math.roundToInt
 
@@ -41,6 +43,7 @@ class ForecastAdapter(private val context: Context, private val onWeatherClick: 
         private val highTempTV: TextView = view.findViewById(R.id.tv_max_temp)
         private val lowTempTV: TextView = view.findViewById(R.id.tv_min_temp)
         private val popTV: TextView = view.findViewById(R.id.tv_pop)
+        val img = view.findViewById<ImageView>(R.id.iv_rv_weather_icon)
 
 
         private var currentWeatherResult: WeatherResults? = null
@@ -103,6 +106,18 @@ class ForecastAdapter(private val context: Context, private val onWeatherClick: 
             highTempTV.text = weatherResult.main.temp_max.roundToInt().toString() + "°F"
             lowTempTV.text = weatherResult.main.temp_min.roundToInt().toString() + "°F"
             popTV.text = weatherResult.pop.roundToInt().toString() + "%"
+
+            val url = "http://openweathermap.org/img/wn/${weatherResult.weather[0].icon}.png"
+            //val url = "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg"
+            Log.d("Image", url)
+            if (url !== null) {
+                Glide.with(itemView)
+                    .load(url)
+                    .centerCrop()
+                    .into(img)
+            } else {
+                img.setImageResource(R.drawable.ic_launcher_background)
+            }
         }
     }
 }
